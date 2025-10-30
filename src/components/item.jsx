@@ -11,6 +11,7 @@ export default function Item() {
   const [isSearch, setIsSearch] = React.useState(false);
   const [lastSearch, setLastSearch] = React.useState("");
   const [caught, setCaught] = React.useState([]);
+  const [imgUrl, setImgUrl] = React.useState([]);
 
   React.useEffect(() => {
     fetchData();
@@ -37,7 +38,12 @@ export default function Item() {
 
     fetch(endpoint)
       .then((response) => response.json())
-      .then((json) => setData(json))
+      .then((json) => {
+        setData(json)
+        setImgUrl(json.sprites.front_default)
+        console.log(json.sprites.front_default)
+        addToCaught(json.sprites.front_default);
+      })
       .catch((error) => setError(error));
   }
 
@@ -58,16 +64,18 @@ export default function Item() {
     setInput("");
   }
 
-  function addToCaught() {
-    const imageUrl = data.sprites.front_default;
-    if (caught.includes(imageUrl)) {
-      alert("You already have this pokemon, dont be greedy");
-      return;
-    }
+  function addToCaught(url) {
+    // if (caught.includes(imgUrl)) {
+    //   return;
+    // }
 
-    setCaught((prev) => [...prev, imageUrl]);
-    console.log("caught in func");
-    console.log(caught);
+    setCaught((prev) => [...prev, url]);
+  }
+
+  function catchAll() {
+    for (let i = 1; i < 1026; i++) {
+      fetchData(i, 'number');
+    }
   }
 
   return (
@@ -115,7 +123,8 @@ export default function Item() {
             Next
           </button>
         </div>
-        <button onClick={addToCaught}>Catch this Pokemon!</button>
+        <button onClick={() => addToCaught(data)}>Catch this Pokemon!</button>
+        <button onClick={catchAll}>greedy button</button>
       </main>
       {caught.length > 0 ? <Caught caught={caught} /> : null}
     </>
