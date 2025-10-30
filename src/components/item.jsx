@@ -1,6 +1,7 @@
 import React from "react";
 import DataCard from "./DataCard";
 import ImageCard from "./ImageCard";
+import Caught from "./Caught";
 
 export default function Item() {
   const [data, setData] = React.useState(null);
@@ -9,6 +10,7 @@ export default function Item() {
   const [input, setInput] = React.useState("");
   const [isSearch, setIsSearch] = React.useState(false);
   const [lastSearch, setLastSearch] = React.useState("");
+  const [caught, setCaught] = React.useState([]);
 
   React.useEffect(() => {
     fetchData();
@@ -19,7 +21,6 @@ export default function Item() {
     setError(null);
     setClicked(true);
     let endpoint;
-
 
     if (type === "name") {
       const name = id.toLowerCase();
@@ -57,46 +58,66 @@ export default function Item() {
     setInput("");
   }
 
+  function addToCaught() {
+    const imageUrl = data.sprites.front_default;
+    if (caught.includes(imageUrl)) {
+      alert("You already have this pokemon, dont be greedy");
+      return;
+    }
+
+    setCaught((prev) => [...prev, imageUrl]);
+    console.log("caught in func");
+    console.log(caught);
+  }
+
   return (
-    <main>
-      <div className="pokemon-card">
-        {error && (
-          <p>
-            {isSearch
-              ? `${lastSearch || "That Pokémon"} could not be found.`
-              : "Something went wrong, please try again."}
-          </p>
-        )}
-        {data ? (
-          <section>
-            <DataCard data={data} />
-            <ImageCard data={data} />
-          </section>
-        ) : clicked && !error ? (
-          <p>loading...</p>
-        ) : null}
-      </div>
-      <form
-        onSubmit={(event) => {
-          formSubmit(event);
-        }}
-      >
-        <label>
-          Search:
-          <input
-            type="text"
-            value={input}
-            onChange={(event) => setInput(event.target.value)}
-            placeholder="pikachu"
-          ></input>
-        </label>
-        <button type="submit">Search</button>
-      </form>
-      <div id="button-div">
-        <button onClick={() => fetchData(Number(data.id) - 1, 'number')}>Previous</button>
-        <button onClick={() => fetchData()}>Catch a Random Pokémon</button>
-        <button onClick={() => fetchData(Number(data.id) + 1, 'number')}>Next</button>
-      </div>
-    </main>
+    <>
+      <main>
+        <div className="pokemon-card">
+          {error && (
+            <p>
+              {isSearch
+                ? `${lastSearch || "That Pokémon"} could not be found.`
+                : "Something went wrong, please try again."}
+            </p>
+          )}
+          {data ? (
+            <section>
+              <DataCard data={data} />
+              <ImageCard data={data} />
+            </section>
+          ) : clicked && !error ? (
+            <p>loading...</p>
+          ) : null}
+        </div>
+        <form
+          onSubmit={(event) => {
+            formSubmit(event);
+          }}
+        >
+          <label>
+            Search:
+            <input
+              type="text"
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+              placeholder="pikachu"
+            ></input>
+          </label>
+          <button type="submit">Search</button>
+        </form>
+        <div id="button-div">
+          <button onClick={() => fetchData(Number(data.id) - 1, "number")}>
+            Previous
+          </button>
+          <button onClick={() => fetchData()}>Catch a Random Pokémon</button>
+          <button onClick={() => fetchData(Number(data.id) + 1, "number")}>
+            Next
+          </button>
+        </div>
+        <button onClick={addToCaught}>Catch this Pokemon!</button>
+      </main>
+      {caught.length > 0 ? <Caught caught={caught} /> : null}
+    </>
   );
 }

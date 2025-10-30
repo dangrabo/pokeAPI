@@ -63,3 +63,11 @@ p {
   justify-content: space-between;
   gap: 1rem;
 }
+
+#my-pc {
+  padding: 5px 20px;
+  background: rgb(115, 178, 255);
+  border: 2px solid rgb(227, 227, 227);
+  margin: 15px auto;
+  border-radius: 30px;
+}
