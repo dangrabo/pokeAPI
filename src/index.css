@@ -47,6 +47,7 @@ button {
   border-radius: 4px;
   background-color: #e0e0e0;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 button:hover {
@@ -55,4 +56,10 @@ button:hover {
 
 p {
   margin: 10px 0;
+}
+
+#button-div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
 }
